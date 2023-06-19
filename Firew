@@ -1,0 +1,5 @@
+x=0
+for i in range(0,100000):
+
+    x+=i
+print (i)
