@@ -45,7 +45,7 @@ def string_to_ec_point(s):
 
 def print_ec_point(point):
     # Вивести координати точки на ЕК
-    # Реалізуйте відповідний код 
+    # Реалізуйте відповідний код
     print(f"({point.x}, {point.y})")
 
 
