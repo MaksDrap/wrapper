@@ -11,8 +11,8 @@
 from elliptic_curves import *
 
 G = base_point_get()
-k = SetRandom(256)
-d = SetRandom(256)
+k = getRandomInteger(256)
+d = getRandomInteger(256)
 
 H1 = scalar_mult(d, G)
 H2 = scalar_mult(k, H1)
@@ -25,5 +25,6 @@ result = H2 == H4
 print(result)
 
 
-Після запуску програми, вона обчислить значення result за формулою k*(d*G) = d*(k*G) і виведе результат на екран. Якщо значення result дорівнює True, це означає, що обчислення були коректні.
+Після запуску програми, вона обчислить значення result виведе результат на екран. Якщо значення result дорівнює True, це означає, що обчислення були коректні.
+
 
