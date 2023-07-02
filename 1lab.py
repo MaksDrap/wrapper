@@ -3,13 +3,13 @@ from Crypto.PublicKey import ECC
 
 
 def base_point_get():
-    # Get the base point G
+    # Отримайте базову точку G
     curve = ECC.generate(curve='P-256')
     return curve.pointQ
 
 
 def scalar_mult(k, a):
-    # Multiply point a by scalar k
+    # Помножте точку a на скаляр k
     curve = ECC.generate(curve='P-256')
     return k * a
 
@@ -30,6 +30,6 @@ def check_equation():
     return result
 
 
-# Perform the equation check
+# Виконайте перевірку рівняння
 equation_result = check_equation()
 print("Equation Result:", equation_result)
