@@ -1,54 +1,53 @@
-from Crypto.Util.number import getRandomInteger
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec, utils
 from Crypto.PublicKey import ECC
 
-def base_point_get(curve):
-    # Отримати базову точку G
-    return curve.pointQ
+def sign_message(private_key, message):
+    # Підписання повідомлення
+    hashed_message = hash_message(message)
+    signature = private_key.sign(hashed_message, ec.ECDSA(utils.Prehashed(hashes.SHA256())))
+    return signature
 
-def ec_point_gen(curve, x, y):
-    # Створити точку ЕК з координатами (x, y)
-    return curve.point(x, y)
+def hash_message(message):
+    # Гешування повідомлення
+    digest = hashes.Hash(hashes.SHA256())
+    digest.update(message.encode())
+    return digest.finalize()
 
-def is_on_curve_check(curve, point):
-    # Перевірити, чи належить точка point до кривої
-    return curve.contains(point)
+def generate_keypair(curve='P-256'):
+    # Генерація пари ключів
+    private_key = ec.generate_private_key(ec.SECP256R1())
+    public_key = private_key.public_key()
+    return private_key, public_key
+def verify_signature(public_key, message, signature):
+    # Перевірка цифрового підпису
+    hashed_message = hash_message(message)
+    try:
+        public_key.verify(signature, hashed_message, ec.ECDSA(utils.Prehashed(hashes.SHA256())))
+        return True
+    except:
+        return False
 
-def add_ec_points(curve, a, b):
-    # Додати точки a і b на ЕК
-    return a + b
+def serialize_private_key(private_key):
+    # Серіалізація особистого ключа
+    return private_key.to_string().hex()
 
-def double_ec_point(curve, a):
-    # Подвоїти точку a на ЕК
-    return 2 * a
+def deserialize_private_key(curve, serialized_private_key):
+    # Десеріалізація особистого ключа
+    return ECC.construct(curve=curve, d=int(serialized_private_key, 16))
 
-def scalar_mult(curve, k, a):
-    # Помножити точку a на скаляр k
-    return k * a
+def serialize_public_key(public_key):
+    # Серіалізація відкритого ключа
+    return public_key.to_string().hex()
 
-def ec_point_to_string(point):
-    # Перетворити точку в рядок
-    return f"{point.x},{point.y}"
+def deserialize_public_key(curve, serialized_public_key):
+    # Десеріалізація відкритого ключа
+    return ECC.import_key(serialized_public_key)
 
-def string_to_ec_point(curve, s):
-    # Перетворити рядок в точку
-    x, y = map(int, s.split(","))
-    return curve.point(x, y)
+def serialize_signature(signature):
+    # Серіалізація цифрового підпису
+    return signature
 
-def print_ec_point(point):
-    # Вивести координати точки на ЕК
-    print(f"({point.x}, {point.y})")
-
-
-curve = ECC.generate(curve='P-256')
-G = base_point_get(curve)
-k = getRandomInteger(256)
-d = getRandomInteger(256)
-
-H1 = scalar_mult(curve, d, G)
-H2 = scalar_mult(curve, k, H1)
-
-H3 = scalar_mult(curve, k, G)
-H4 = scalar_mult(curve, d, H3)
-
-result = H2 == H4
-
+def deserialize_signature(serialized_signature):
+    # Десеріалізація цифрового підпису
+    return serialized_signature
