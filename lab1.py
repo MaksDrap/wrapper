@@ -52,4 +52,3 @@ H4 = scalar_mult(curve, d, H3)
 
 result = H2 == H4
 
-print(result)
